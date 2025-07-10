@@ -159,7 +159,7 @@ write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully
 #endregion Custom Device Configuration Profiles
 
 #region Remediations
-$path = "$workingPath\temp\Remediations"
+$path = "$workingPath\Remediations"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting App Configuration Policies to $path"
 $uri = "https://graph.microsoft.com/beta/deviceManagement/deviceHealthScripts/"
@@ -177,7 +177,7 @@ write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully
 #endregion Remediations
 
 #region Windows Platform Scripts
-$path = "$workingPath\temp\PowerShell_Scripts"
+$path = "$workingPath\PowerShell_Scripts"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Windows PowerShell scripts to $path"
 $uri = "https://graph.microsoft.com/beta/deviceManagement/deviceManagementScripts/"
@@ -195,7 +195,7 @@ write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully
 #endregion Windows Platform Scripts
 
 #region Filters
-$path = "$workingPath\temp\Filters"
+$path = "$workingPath\Filters"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Filters to $path"
 $uri = "https://graph.microsoft.com/beta/deviceManagement/assignmentFilters/"
@@ -215,7 +215,7 @@ write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully
 #endregion Filters
 
 #region Custom Compliance Scripts
-$path = "$workingPath\temp\custom_compliance_scripts"
+$path = "$workingPath\custom_compliance_scripts"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Compliance Policies to $path"
 $URI = "https://graph.microsoft.com/beta/deviceManagement/deviceComplianceScripts/"
@@ -241,7 +241,7 @@ write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully
 #endregion Custom Compliance Scripts
 
 #region Compliance Policies
-$compliancepolicypath = "$workingPath\temp\compliance_policies"
+$compliancepolicypath = "$workingPath\compliance_policies"
 New-Item -Path $compliancepolicypath -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Compliance Policies to $compliancepolicypath"
 $uri = "https://graph.microsoft.com/beta/deviceManagement/deviceCompliancePolicies/"
