@@ -37,7 +37,7 @@ Foreach ($policyId in $PolicyIds) {
 $policy = Invoke-MgGraphRequest -Method GET -URI $uri$policyId
 $policyjson = $policy | ConvertTo-Json -Depth 15
 $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
-$policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
+$policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname)successfully"
 }
 
@@ -55,7 +55,7 @@ $policy.PsObject.Properties.Remove("ModifiedDateTime")
 $policy.PsObject.Properties.Remove("createdDateTime")
 $policyjson = $policy | ConvertTo-Json -Depth 15
 $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
-$policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
+$policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
@@ -81,7 +81,7 @@ Foreach ($policy in $allPolicies) {
     $policy | Add-Member -MemberType NoteProperty -Name 'settings' -Value @() -Force
     $policy.settings += $policyconfig.value
     $policyJson = $policy | ConvertTo-Json -Depth 25 
-    $policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
+    $policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
     Write-Host -ForegroundColor Yellow "Exported $($policy.name) successfully"
 }
 
@@ -96,7 +96,7 @@ Foreach ($policyId in $PolicyIds) {
 $policy = Invoke-MgGraphRequest -Method GET -URI $uri$policyId
 $policyjson = $policy | ConvertTo-Json -Depth 15
 $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
-$policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
+$policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
@@ -111,7 +111,7 @@ Foreach ($policyId in $PolicyIds) {
 $policy = Invoke-MgGraphRequest -Method GET -URI $uri$policyId
 $policyjson = $policy | ConvertTo-Json -Depth 15
 $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
-$policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
+$policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
@@ -147,7 +147,7 @@ if ($policy.'@odata.type' -eq "#microsoft.graph.windows10CustomConfiguration") {
 }
 $policyjson = $policy | ConvertTo-Json -Depth 15
 $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
-$policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
+$policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
@@ -164,7 +164,7 @@ $policy.PsObject.Properties.Remove("id")
 $policy.PsObject.Properties.Remove("lastModifiedDateTime")
 $policyjson = $policy | ConvertTo-Json -Depth 15
 $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
-$policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
+$policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
@@ -181,7 +181,7 @@ $policy.PsObject.Properties.Remove("id")
 $policy.PsObject.Properties.Remove("lastModifiedDateTime")
 $policyjson = $policy | ConvertTo-Json -Depth 15
 $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
-$policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
+$policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
@@ -200,7 +200,7 @@ $policy.PsObject.Properties.Remove("createdDateTime")
 $policy.PsObject.Properties.Remove("payloads")
 $policyjson = $policy | ConvertTo-Json -Depth 15
 $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
-$policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
+$policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
@@ -225,7 +225,7 @@ $policy.PsObject.Properties.Remove("id")
 $policy.PsObject.Properties.Remove("lastModifiedDateTime")
 $policy.PsObject.Properties.Remove("createdDateTime")
 $policyjson = $policy | ConvertTo-Json -Depth 15
-$policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
+$policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
@@ -248,7 +248,7 @@ $policy.PsObject.Properties.Remove("scheduledActionsForRule@odata.context")
 $policy.scheduledActionsForRule[0].ruleName = "ComplianceRule"
 $policyjson = $policy | ConvertTo-Json -Depth 15
 $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
-$policyJson | Out-File -FilePath "$compliancepolicypath\$name.json" -Encoding utf8
+$policyJson | Out-File -LiteralPath "$compliancepolicypath\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 $allPolicies += $policy
 }
