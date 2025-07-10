@@ -1,10 +1,11 @@
 #check for log directory and start transcript 
-Write-Host -ForegroundColor DarkYellow "Checking for directory C:\temp for transcript and output files"
-$LogPath = "C:\Temp"
-$LogPathExists = Test-Path $LogPath
-If ($LogPathExists -ne $True) {
-	New-Item -Path "C:\" -Name Temp -ItemType Directory
+$workingPath = "C:\Temp\IntuneExport"
+Write-Host -ForegroundColor DarkYellow "Checking for directory $workingPath for transcript and output files"
+If (!(Test-Path $workingPath)) {
+	New-Item -Path $workingPath -ItemType Directory
 }
+$LogPath = "$workingPath\log"
+New-Item -Path $LogPath -ItemType Directory -Force
 Start-Transcript -Path $LogPath\PolicyExport.log -Force
 
 #check for and install required modules
@@ -27,7 +28,7 @@ $invalidChars = [System.IO.Path]::GetInvalidFileNameChars()
 Connect-MgGraph -Scopes "Policy.Read.All","DeviceManagementConfiguration.Read.All"
 
 #Conditional Access Policies
-$path = "C:\temp\CA-Policies"
+$path = "$workingPath\CA-Policies"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Conditional Access Policies to $path"
 $uri = "https://graph.microsoft.com/beta/identity/conditionalAccess/policies/"
@@ -42,7 +43,7 @@ write-host -ForegroundColor yellow "Exported $($policy.displayname)successfully"
 }
 
 #Named Locations
-$path = "C:\temp\Named Locations"
+$path = "$workingPath\Named Locations"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Named Locations to $path"
 $uri = "https://graph.microsoft.com/beta/conditionalAccess/namedLocations/"
@@ -60,7 +61,7 @@ write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully
 }
 
 #Settings Catalog Policies
-$path = "C:\temp\ConfigurationPolicies"
+$path = "$workingPath\ConfigurationPolicies"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Configuration Policies to $path"
 $uri = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/"
@@ -86,7 +87,7 @@ Foreach ($policy in $allPolicies) {
 }
 
 #App Protection Policies
-$path = "C:\temp\App_Protection_Policies"
+$path = "$workingPath\App_Protection_Policies"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting App Protection Policies to $path"
 $uri = "https://graph.microsoft.com/beta/deviceAppManagement/managedAppPolicies/"
@@ -101,7 +102,7 @@ write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully
 }
 
 #App Configuration Policies
-$path = "C:\temp\App_Configuration_Policies"
+$path = "$workingPath\App_Configuration_Policies"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting App Configuration Policies to $path"
 $uri = "https://graph.microsoft.com/beta/deviceAppManagement/mobileAppConfigurations/"
@@ -116,7 +117,7 @@ write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully
 }
 
 #Custom Device Configuration Profiles
-$path = "C:\temp\DeviceConfigurations"
+$path = "$workingPath\DeviceConfigurations"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Device Configurations to $path"
 $uri = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/"
@@ -152,7 +153,7 @@ write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully
 }
 
 #Remediations
-$path = "C:\temp\Remediations"
+$path = "$workingPath\temp\Remediations"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting App Configuration Policies to $path"
 $uri = "https://graph.microsoft.com/beta/deviceManagement/deviceHealthScripts/"
@@ -169,7 +170,7 @@ write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully
 }
 
 #Windows Platform Scripts
-$path = "C:\temp\PowerShell_Scripts"
+$path = "$workingPath\temp\PowerShell_Scripts"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Windows PowerShell scripts to $path"
 $uri = "https://graph.microsoft.com/beta/deviceManagement/deviceManagementScripts/"
@@ -186,7 +187,7 @@ write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully
 }
 
 #Filters
-$path = "C:\temp\Filters"
+$path = "$workingPath\temp\Filters"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Filters to $path"
 $uri = "https://graph.microsoft.com/beta/deviceManagement/assignmentFilters/"
@@ -205,7 +206,7 @@ write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully
 }
 
 ### Custom Compliance Scripts
-$path = "C:\temp\custom_compliance_scripts"
+$path = "$workingPath\temp\custom_compliance_scripts"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Compliance Policies to $path"
 $URI = "https://graph.microsoft.com/beta/deviceManagement/deviceComplianceScripts/"
@@ -230,7 +231,7 @@ write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully
 }
 
 #Compliance Policies
-$compliancepolicypath = "C:\temp\compliance_policies"
+$compliancepolicypath = "$workingPath\temp\compliance_policies"
 New-Item -Path $compliancepolicypath -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Compliance Policies to $compliancepolicypath"
 $uri = "https://graph.microsoft.com/beta/deviceManagement/deviceCompliancePolicies/"
