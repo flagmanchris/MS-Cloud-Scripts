@@ -27,7 +27,7 @@ $invalidChars = [System.IO.Path]::GetInvalidFileNameChars()
 
 Connect-MgGraph -Scopes "Policy.Read.All","DeviceManagementConfiguration.Read.All"
 
-#Conditional Access Policies
+#region Conditional Access Policies
 $path = "$workingPath\CA-Policies"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Conditional Access Policies to $path"
@@ -41,8 +41,9 @@ $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars 
 $policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname)successfully"
 }
+#endregion Conditional Access Policies
 
-#Named Locations
+#region Named Locations
 $path = "$workingPath\Named Locations"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Named Locations to $path"
@@ -59,8 +60,9 @@ $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars 
 $policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
+#endregion Named Locations
 
-#Settings Catalog Policies
+#region Settings Catalog Policies
 $path = "$workingPath\ConfigurationPolicies"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Configuration Policies to $path"
@@ -85,8 +87,9 @@ Foreach ($policy in $allPolicies) {
     $policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
     Write-Host -ForegroundColor Yellow "Exported $($policy.name) successfully"
 }
+#endregion Settings Catalog Policies
 
-#App Protection Policies
+#region App Protection Policies
 $path = "$workingPath\App_Protection_Policies"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting App Protection Policies to $path"
@@ -100,8 +103,9 @@ $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars 
 $policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
+#endregion App Protection Policies
 
-#App Configuration Policies
+#region App Configuration Policies
 $path = "$workingPath\App_Configuration_Policies"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting App Configuration Policies to $path"
@@ -115,8 +119,9 @@ $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars 
 $policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
+#endregion App Configuration Policies
 
-#Custom Device Configuration Profiles
+#region Custom Device Configuration Profiles
 $path = "$workingPath\DeviceConfigurations"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Device Configurations to $path"
@@ -151,8 +156,9 @@ $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars 
 $policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
+#endregion Custom Device Configuration Profiles
 
-#Remediations
+#region Remediations
 $path = "$workingPath\temp\Remediations"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting App Configuration Policies to $path"
@@ -168,8 +174,9 @@ $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars 
 $policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
+#endregion Remediations
 
-#Windows Platform Scripts
+#region Windows Platform Scripts
 $path = "$workingPath\temp\PowerShell_Scripts"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Windows PowerShell scripts to $path"
@@ -185,8 +192,9 @@ $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars 
 $policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
+#endregion Windows Platform Scripts
 
-#Filters
+#region Filters
 $path = "$workingPath\temp\Filters"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Filters to $path"
@@ -204,8 +212,9 @@ $name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars 
 $policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
+#endregion Filters
 
-### Custom Compliance Scripts
+#region Custom Compliance Scripts
 $path = "$workingPath\temp\custom_compliance_scripts"
 New-Item -Path $path -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Compliance Policies to $path"
@@ -229,8 +238,9 @@ $policyjson = $policy | ConvertTo-Json -Depth 15
 $policyJson | Out-File -LiteralPath "$path\$name.json" -Encoding utf8
 write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
+#endregion Custom Compliance Scripts
 
-#Compliance Policies
+#region Compliance Policies
 $compliancepolicypath = "$workingPath\temp\compliance_policies"
 New-Item -Path $compliancepolicypath -ItemType Directory -Force
 Write-Host -ForegroundColor Green "Exporting Compliance Policies to $compliancepolicypath"
@@ -265,6 +275,8 @@ ForEach ($policy in $allPolicies) {
     }
 }
 $ComplianceScriptReference | export-csv -Encoding utf8 -path $compliancepolicypath\ComplianceScriptReference.csv
+#endregion Compliance Policies
 
 Stop-Transcript
-Disconnect-MgGraph
+Write-Host "Script complete" -ForegroundColor Green
+$null = Disconnect-MgGraph
