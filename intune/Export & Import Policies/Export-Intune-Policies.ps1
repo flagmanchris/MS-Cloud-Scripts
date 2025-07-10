@@ -22,6 +22,8 @@ else {
 }
 }
 
+$invalidChars = [System.IO.Path]::GetInvalidFileNameChars()
+
 Connect-MgGraph -Scopes "Policy.Read.All","DeviceManagementConfiguration.Read.All"
 
 #Conditional Access Policies
@@ -34,9 +36,9 @@ $policyIds = $response.value.id
 Foreach ($policyId in $PolicyIds) {
 $policy = Invoke-MgGraphRequest -Method GET -URI $uri$policyId
 $policyjson = $policy | ConvertTo-Json -Depth 15
-$name = $policy.displayname
+$name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
 $policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
-write-host -ForegroundColor yellow "Exported $name successfully"
+write-host -ForegroundColor yellow "Exported $($policy.displayname)successfully"
 }
 
 #Named Locations
@@ -52,9 +54,9 @@ $policy.PsObject.Properties.Remove("id")
 $policy.PsObject.Properties.Remove("ModifiedDateTime")
 $policy.PsObject.Properties.Remove("createdDateTime")
 $policyjson = $policy | ConvertTo-Json -Depth 15
-$name = $policy.displayname
+$name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
 $policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
-write-host -ForegroundColor yellow "Exported $name successfully"
+write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
 #Settings Catalog Policies
@@ -72,7 +74,7 @@ do {
     }
 } while ($nextLink)
 Foreach ($policy in $allPolicies) {
-    $name = $policy.name
+    $name = -join ($policy.name.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
     $id = $policy.id
     $policy = Invoke-MgGraphRequest -Method GET -Uri $uri/$id -OutputType PSObject
     $policyconfig = Invoke-MgGraphRequest -Method GET -Uri "$uri$($policy.id)/settings"
@@ -80,7 +82,7 @@ Foreach ($policy in $allPolicies) {
     $policy.settings += $policyconfig.value
     $policyJson = $policy | ConvertTo-Json -Depth 25 
     $policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
-    Write-Host -ForegroundColor Yellow "Exported $name successfully"
+    Write-Host -ForegroundColor Yellow "Exported $($policy.name) successfully"
 }
 
 #App Protection Policies
@@ -93,9 +95,9 @@ $policyIds = $response.value.id
 Foreach ($policyId in $PolicyIds) {
 $policy = Invoke-MgGraphRequest -Method GET -URI $uri$policyId
 $policyjson = $policy | ConvertTo-Json -Depth 15
-$name = $policy.displayname
+$name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
 $policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
-write-host -ForegroundColor yellow "Exported $name successfully"
+write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
 #App Configuration Policies
@@ -108,9 +110,9 @@ $policyIds = $response.value.id
 Foreach ($policyId in $PolicyIds) {
 $policy = Invoke-MgGraphRequest -Method GET -URI $uri$policyId
 $policyjson = $policy | ConvertTo-Json -Depth 15
-$name = $policy.displayname
+$name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
 $policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
-write-host -ForegroundColor yellow "Exported $name successfully"
+write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
 #Custom Device Configuration Profiles
@@ -144,9 +146,9 @@ if ($policy.'@odata.type' -eq "#microsoft.graph.windows10CustomConfiguration") {
     }
 }
 $policyjson = $policy | ConvertTo-Json -Depth 15
-$name = $policy.displayname
+$name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
 $policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
-write-host -ForegroundColor yellow "Exported $name successfully"
+write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
 #Remediations
@@ -161,9 +163,9 @@ $policy = Invoke-MgGraphRequest -Method GET -URI $uri$policyId -OutputType PSObj
 $policy.PsObject.Properties.Remove("id")
 $policy.PsObject.Properties.Remove("lastModifiedDateTime")
 $policyjson = $policy | ConvertTo-Json -Depth 15
-$name = $policy.displayname
+$name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
 $policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
-write-host -ForegroundColor yellow "Exported $name successfully"
+write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
 #Windows Platform Scripts
@@ -178,9 +180,9 @@ $policy = Invoke-MgGraphRequest -Method GET -URI $uri$policyId -OutputType PSObj
 $policy.PsObject.Properties.Remove("id")
 $policy.PsObject.Properties.Remove("lastModifiedDateTime")
 $policyjson = $policy | ConvertTo-Json -Depth 15
-$name = $policy.displayname
+$name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
 $policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
-write-host -ForegroundColor yellow "Exported $name successfully"
+write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
 #Filters
@@ -197,9 +199,9 @@ $policy.PsObject.Properties.Remove("lastModifiedDateTime")
 $policy.PsObject.Properties.Remove("createdDateTime")
 $policy.PsObject.Properties.Remove("payloads")
 $policyjson = $policy | ConvertTo-Json -Depth 15
-$name = $policy.displayname
+$name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
 $policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
-write-host -ForegroundColor yellow "Exported $name successfully"
+write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
 ### Custom Compliance Scripts
@@ -212,11 +214,10 @@ $policyIds = $response.value.id
 $ComplianceScriptReference = @()
 Foreach ($policyId in $PolicyIds) {
 $policy = Invoke-MgGraphRequest -Method GET -URI "$uri$policyId" -OutputType PSObject
-$name = $policy.displayname
-write-host -ForegroundColor yellow "Exported $name successfully"
+$name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
 $ComplianceScriptReference += [PSCustomObject]@{
     ID = $policyId
-    DisplayName = $name
+    DisplayName = $policy.displayname
     CompliancePolicyName = $null
     NewCompliancePolicyID = $null
 }
@@ -225,6 +226,7 @@ $policy.PsObject.Properties.Remove("lastModifiedDateTime")
 $policy.PsObject.Properties.Remove("createdDateTime")
 $policyjson = $policy | ConvertTo-Json -Depth 15
 $policyJson | Out-File -FilePath "$path\$name.json" -Encoding utf8
+write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 }
 
 #Compliance Policies
@@ -245,9 +247,9 @@ $policy.PsObject.Properties.Remove("scheduledActionsForRule@odata.context")
 ($policy.scheduledActionsForRule[0]).PSObject.Properties.Remove('scheduledActionConfigurations@odata.context')
 $policy.scheduledActionsForRule[0].ruleName = "ComplianceRule"
 $policyjson = $policy | ConvertTo-Json -Depth 15
-$name = $policy.displayname
+$name = -join ($policy.displayname.ToCharArray() | Where-Object { $invalidChars -notcontains $_ })
 $policyJson | Out-File -FilePath "$compliancepolicypath\$name.json" -Encoding utf8
-write-host -ForegroundColor yellow "Exported $name successfully"
+write-host -ForegroundColor yellow "Exported $($policy.displayname) successfully"
 $allPolicies += $policy
 }
 
